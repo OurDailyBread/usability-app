@@ -77,6 +77,7 @@ app.get('/loadConfiguration', function(request, response) {
 // Saves endorsement changes to Airtable
 app.post('/saveConfiguration', function(request, response) {
   console.log('POST received');
+  console.log(request.body.items);
   //var result = (JSON.parse(request.body.result)).items;
   var result = request.body.items;
   for (var index in result) {
@@ -84,6 +85,7 @@ app.post('/saveConfiguration', function(request, response) {
     // save new result
     if ((typeof result[index].id == 'undefined') ||
       (result[index].id == '')) {
+	  console.log('creating new entry');
       base('Configuration Table').create({
         "Name": result[index].name,
         "Type": result[index].type,
@@ -101,6 +103,7 @@ app.post('/saveConfiguration', function(request, response) {
       });
     } else {
       // update old entry
+	  console.log('updating old entry');
       base('Configuration Table').replace(result[index].id, {
         "Name": result[index].name,
         "Type": result[index].type,

@@ -77,7 +77,8 @@ app.get('/loadConfiguration', function(request, response) {
 // Saves endorsement changes to Airtable
 app.post('/saveConfiguration', function(request, response) {
   console.log('POST received');
-  var result = (JSON.parse(request.body.result)).items;
+  //var result = (JSON.parse(request.body.result)).items;
+  var result = request.body;
   for (var index in result) {
     console.log('index :' + index);
     // save new result

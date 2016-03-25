@@ -83,7 +83,7 @@ app.post('/saveConfiguration', function(request, response) {
   }
   console.log(request.body);
   //var result = (JSON.parse(request.body.result)).items;
-  var result = request.body.items;
+  var result = (JSON.parse(request.body)).items;
   for (var index in result) {
     console.log('index :' + index);
     // save new result

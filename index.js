@@ -78,7 +78,7 @@ app.get('/loadConfiguration', function(request, response) {
 app.post('/saveConfiguration', function(request, response) {
   console.log('POST received');
   //var result = (JSON.parse(request.body.result)).items;
-  var result = request.body;
+  var result = request.body.items;
   for (var index in result) {
     console.log('index :' + index);
     // save new result

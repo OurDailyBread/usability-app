@@ -34,7 +34,7 @@ Airtable.configure({
 var base = Airtable.base('appQGPt8lnDSPI25o');
 
 app.get('/loadConfiguration', function(request, response) {
-  var JSONresult = {
+  var JSONresults = {
     items: []
   };
   console.log('GET received');
@@ -47,10 +47,10 @@ app.get('/loadConfiguration', function(request, response) {
 
     records.forEach(function(record) {
       console.log('Retrieved ', record.get('Name'));
-      results.items.push({
+      JSONresults.items.push({
         'id': record.getId(),
         'name': record.get('Name'),
-		'type': record.get('Type'),
+        'type': record.get('Type'),
         'x-pos': record.get('X Position'),
         'y-pos': record.get('Y Position'),
         'size-x': record.get('Size X'),
@@ -66,8 +66,9 @@ app.get('/loadConfiguration', function(request, response) {
   }, function done(error) {
     if (error) {
       console.log(error);
+      response.send(error);
     } else {
-      response.send(JSON.stringify(JSONresult));
+      response.send(JSON.stringify(JSONresults));
     }
   });
   //response.send('done');
@@ -78,7 +79,7 @@ app.post('/saveConfiguration', function(request, response) {
   console.log('POST received');
   var result = (JSON.parse(request.body.result)).items;
   for (var index in result) {
-	  console.log('index :' + index);
+    console.log('index :' + index);
     // save new result
     if ((typeof result[index].id == 'undefined') ||
       (result[index].id == '')) {

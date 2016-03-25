@@ -47,7 +47,7 @@ app.get('/loadConfiguration', function(request, response) {
 
     records.forEach(function(record) {
       console.log('Retrieved ', record.get('Name'));
-      items.result.push({
+      results.items.push({
         'id': record.getId(),
         'name': record.get('Name'),
 		'type': record.get('Type'),

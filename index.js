@@ -98,7 +98,7 @@ app.post('/saveConfiguration', function(request, response) {
         "Y Position": result[index]['y-pos'],
         "Size X": result[index]['size-x'],
         "Size Y": result[index]['size-y'],
-		"Padding": result[index['padding']
+		"Padding": result[index]['padding']
       }, function(err, record) {
         if (err) {
           console.log(err);

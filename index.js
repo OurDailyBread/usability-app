@@ -84,49 +84,59 @@ app.post('/saveConfiguration', function(request, response) {
   }
   console.log(request.body);
   //var result = (JSON.parse(request.body.result)).items;
-  var result = (JSON.parse(request.body.result)).items;
-  for (var index in result) {
-    console.log('index :' + index);
-    // save new result
-    if ((typeof result[index].id == 'undefined') ||
-      (result[index].id == '')) {
+  var results = (JSON.parse(request.body.result)).items;
+  async.each(results, function(result, callback) {
+	  // save new result
+    if ((typeof result.id == 'undefined') ||
+      (result.id == '')) {
 	  console.log('creating new entry');
       base('Configuration Table').create({
-        "Name": result[index].name,
-        "Type": result[index].type,
-        "X Position": result[index]['x-pos'],
-        "Y Position": result[index]['y-pos'],
-        "Size X": result[index]['size-x'],
-        "Size Y": result[index]['size-y'],
-		"Padding": result[index]['padding']
+        "Name": result.name,
+        "Type": result.type,
+        "X Position": result['x-pos'],
+        "Y Position": result['y-pos'],
+        "Size X": result['size-x'],
+        "Size Y": result['size-y'],
+		"Padding": result['padding']
       }, function(err, record) {
         if (err) {
           console.log(err);
+		  callback(err);
           return;
         }
         console.log('done creating new entry');
-        response.send('done creating new entry');
+        callback(null, 'success');
       });
     } else {
       // update old entry
 	  console.log('updating old entry');
-      base('Configuration Table').replace(result[index].id, {
-        "Name": result[index].name,
-        "Type": result[index].type,
-        "X Position": result[index]['x-pos'],
-        "Y Position": result[index]['y-pos'],
-        "Size X": result[index]['size-x'],
-        "Size Y": result[index]['size-y'],
-		"Padding": result[index]['padding']
+      base('Configuration Table').replace(result.id, {
+        "Name": result.name,
+        "Type": result.type,
+        "X Position": result['x-pos'],
+        "Y Position": result['y-pos'],
+        "Size X": result['size-x'],
+        "Size Y": result['size-y'],
+		"Padding": result['padding']
       }, function(err, record) {
         if (err) {
           console.log(err);
+		  callback(err);
           return;
         }
         console.log('done replacing entry');
-        response.send('done replacing entry');
+        callback(null, 'success');
       });
     }
-  }
-  //response.send('done');
+  }, function (error) {
+    if (error) {
+		console.log('Error: ' + error);
+		response.send('Error: ' + error);
+		return;
+	} else {
+		console.log('done replacing all entries');
+        response.send('done replacing all entries');
+	}
+  });
+  
 });

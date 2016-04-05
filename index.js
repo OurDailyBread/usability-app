@@ -54,7 +54,8 @@ app.get('/loadConfiguration', function(request, response) {
         'x-pos': record.get('X Position'),
         'y-pos': record.get('Y Position'),
         'size-x': record.get('Size X'),
-        'size-y': record.get('Size Y')
+        'size-y': record.get('Size Y'),
+		'padding': record.get('Padding')
       });
     });
 
@@ -96,7 +97,8 @@ app.post('/saveConfiguration', function(request, response) {
         "X Position": result[index]['x-pos'],
         "Y Position": result[index]['y-pos'],
         "Size X": result[index]['size-x'],
-        "Size Y": result[index]['size-y']
+        "Size Y": result[index]['size-y'],
+		"Padding": result[index['padding']
       }, function(err, record) {
         if (err) {
           console.log(err);

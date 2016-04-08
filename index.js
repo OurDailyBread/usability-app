@@ -254,7 +254,7 @@ app.post('/saveTouches', function(request, response) {
 					  id = prevTouches[index].id;
 				  }
 		  }
-          if (id == 'none) {
+          if (id == 'none') {
             console.log('creating new entry');
             base('Touch Points').create({
 

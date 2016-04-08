@@ -55,7 +55,7 @@ app.get('/loadConfiguration', function(request, response) {
         'y-pos': record.get('Y Position'),
         'size-x': record.get('Size X'),
         'size-y': record.get('Size Y'),
-		'padding': record.get('Padding')
+        'padding': record.get('Padding')
       });
     });
 
@@ -79,17 +79,17 @@ app.get('/loadConfiguration', function(request, response) {
 app.post('/saveConfiguration', function(request, response) {
   console.log('POST received');
   if (typeof request.body == 'undefined') {
-	console.log('request body is undefined');
-	response.send('undefined body');
+    console.log('request body is undefined');
+    response.send('undefined body');
   }
   console.log(request.body);
   //var result = (JSON.parse(request.body.result)).items;
   var results = (JSON.parse(request.body.result)).items;
   async.each(results, function(result, callback) {
-	  // save new result
+    // save new result
     if ((typeof result.id == 'undefined') ||
       (result.id == '')) {
-	  console.log('creating new entry');
+      console.log('creating new entry');
       base('Configuration Table').create({
         "Name": result.name,
         "Type": result.type,
@@ -97,11 +97,11 @@ app.post('/saveConfiguration', function(request, response) {
         "Y Position": result['y-pos'],
         "Size X": result['size-x'],
         "Size Y": result['size-y'],
-		"Padding": result['padding']
+        "Padding": result['padding']
       }, function(err, record) {
         if (err) {
           console.log(err);
-		  callback(err);
+          callback(err);
           return;
         }
         console.log('done creating new entry');
@@ -109,7 +109,7 @@ app.post('/saveConfiguration', function(request, response) {
       });
     } else {
       // update old entry
-	  console.log('updating old entry');
+      console.log('updating old entry');
       base('Configuration Table').replace(result.id, {
         "Name": result.name,
         "Type": result.type,
@@ -117,30 +117,29 @@ app.post('/saveConfiguration', function(request, response) {
         "Y Position": result['y-pos'],
         "Size X": result['size-x'],
         "Size Y": result['size-y'],
-		"Padding": result['padding']
+        "Padding": result['padding']
       }, function(err, record) {
         if (err) {
           console.log(err);
-		  callback(err);
+          callback(err);
           return;
         }
         console.log('done replacing entry');
         callback(null, 'success');
       });
     }
-  }, function (error) {
+  }, function(error) {
     if (error) {
-		console.log('Error: ' + error);
-		response.send('Error: ' + error);
-		return;
-	} else {
-		console.log('done replacing all entries');
-        response.send('done replacing all entries');
-	}
+      console.log('Error: ' + error);
+      response.send('Error: ' + error);
+      return;
+    } else {
+      console.log('done replacing all entries');
+      response.send('done replacing all entries');
+    }
   });
-  
-});
 
+});
 
 app.get('/loadTouches', function(request, response) {
   var JSONresults = {
@@ -161,13 +160,13 @@ app.get('/loadTouches', function(request, response) {
         'name': record.get('Name'),
         'x-pos': record.get('X Position'),
         'y-pos': record.get('Y Position'),
-		'time': record.get('Time'),
+        'time': record.get('Time'),
         'combo': record.get('Combo'),
         'size': record.get('Size'),
-		'space': record.get('Space'),
-		'quadrant': record.get('Quadrant'),
-		'trial': record.get('Trial'),
-		'details': record.get('Details')
+        'space': record.get('Space'),
+        'quadrant': record.get('Quadrant'),
+        'trial': record.get('Trial'),
+        'details': record.get('Details')
       });
     });
 
@@ -191,74 +190,143 @@ app.get('/loadTouches', function(request, response) {
 app.post('/saveTouches', function(request, response) {
   console.log('POST received');
   if (typeof request.body == 'undefined') {
-	console.log('request body is undefined');
-	response.send('undefined body');
+    console.log('request body is undefined');
+    response.send('undefined body');
   }
   console.log(request.body);
-  //var result = (JSON.parse(request.body.result)).items;
+
+  var prevTouches = [];
   var results = (JSON.parse(request.body.result)).items;
-  async.each(results, function(result, callback) {
-	  // save new result
-    if ((typeof result.id == 'undefined') ||
-      (result.id == '')) {
-	  console.log('creating new entry');
-      base('Touch Points').create({
-		
-        "Name": result['name'],
-        "X Position": result['x-pos'],
-        "Y Position": result['y-pos'],
-        "Time": result['time'],
-        "Combo": result['combo'],
-		"Size": result['size'],
-		"Space": result['space'],
-		"Quadrant": result['quandrant'],
-		"Trial": result['trial'],
-		"Details": result['details']
-		
-      }, function(err, record) {
-        if (err) {
-          console.log(err);
-		  callback(err);
-          return;
-        }
-        console.log('done creating new entry');
-        callback(null, 'success');
-      });
-    } else {
-      // update old entry
-	  console.log('updating old entry');
-      base('Touch Points').replace(result.id, {
-        
-		"Name": result['name'],
-        "X Position": result['x-pos'],
-        "Y Position": result['y-pos'],
-        "Time": result['time'],
-        "Combo": result['combo'],
-		"Size": result['size'],
-		"Space": result['space'],
-		"Quadrant": result['quandrant'],
-		"Trial": result['trial'],
-		"Details": result['details']
-		
-      }, function(err, record) {
-        if (err) {
-          console.log(err);
-		  callback(err);
-          return;
-        }
-        console.log('done replacing entry');
-        callback(null, 'success');
-      });
-    }
-  }, function (error) {
-    if (error) {
-		console.log('Error: ' + error);
-		response.send('Error: ' + error);
-		return;
-	} else {
-		console.log('done replacing all entries');
+
+  async.series([
+      // load all previous touches
+      function(callback2) {
+        base('Touch Points').select({
+          // Selecting the first 3 records in Main View:
+          view: "Main View"
+        }).eachPage(function page(records, fetchNextPage) {
+
+          // This function (`page`) will get called for each page of records.
+
+          records.forEach(function(record) {
+            console.log('Retrieved ', record.get('Name'));
+            prevTouches.push({
+              'id': record.getId(),
+              'name': record.get('Name'),
+              'x-pos': record.get('X Position'),
+              'y-pos': record.get('Y Position'),
+              'time': record.get('Time'),
+              'combo': record.get('Combo'),
+              'size': record.get('Size'),
+              'space': record.get('Space'),
+              'quadrant': record.get('Quadrant'),
+              'trial': record.get('Trial'),
+              'details': record.get('Details')
+            });
+          });
+
+          // To fetch the next page of records, call `fetchNextPage`.
+          // If there are more records, `page` will get called again.
+          // If there are no more records, `done` will get called.
+          fetchNextPage();
+
+        }, function done(error) {
+          if (error) {
+            console.log(error);
+            callback2(error);
+          } else {
+            console.log('all previous touches loaded');
+            callback2(null, 'loading succeeded');
+          }
+        });
+
+      },
+      function(callback2) {
+		// create new touches or update previous ones
+        async.each(results, function(result, callback) {
+          // save new result
+		  var id = 'none';
+		  for (var index in prevTouches) {
+			  if ((prevTouches[index].combo == result['combo']) &&
+			      (prevTouches[index].quadrant == result['quadrant']) &&
+				  (prevTouches[index].trial == result['trial']))
+				  {
+					  id = prevTouches[index].id;
+				  }
+		  }
+          if (id == 'none) {
+            console.log('creating new entry');
+            base('Touch Points').create({
+
+              "Name": result['name'],
+              "X Position": result['x-pos'],
+              "Y Position": result['y-pos'],
+              "Time": result['time'],
+              "Combo": result['combo'],
+              "Size": result['size'],
+              "Space": result['space'],
+              "Quadrant": result['quandrant'],
+              "Trial": result['trial'],
+              "Details": result['details']
+
+            }, function(err, record) {
+              if (err) {
+                console.log(err);
+                callback(err);
+                return;
+              }
+              console.log('done creating new entry');
+              callback(null, 'success');
+            });
+          } else {
+            // update old entry
+            console.log('updating old entry');
+            base('Touch Points').replace(id, {
+
+              "Name": result['name'],
+              "X Position": result['x-pos'],
+              "Y Position": result['y-pos'],
+              "Time": result['time'],
+              "Combo": result['combo'],
+              "Size": result['size'],
+              "Space": result['space'],
+              "Quadrant": result['quandrant'],
+              "Trial": result['trial'],
+              "Details": result['details']
+
+            }, function(err, record) {
+              if (err) {
+                console.log(err);
+                callback(err);
+                return;
+              }
+              console.log('done replacing entry');
+              callback(null, 'success');
+            });
+          }
+        }, function(error) {
+          if (error) {
+            console.log('Error: ' + error);
+            callback2(error);
+            return;
+          } else {
+            console.log('done replacing all entries');
+            callback2(null, 'done replacing all entries');
+          }
+        });
+      }
+    ],
+    // optional callback
+    function(error, results) {
+      // results is now equal to ['one', 'two']
+      if (error) {
+        console.log('Error: ' + error);
+        response.send('Error: ' + error);
+        return;
+      } else {
+        console.log('done replacing all entries');
         response.send('done replacing all entries');
-	}
-  });
-  
+      }
+    });
+
 });

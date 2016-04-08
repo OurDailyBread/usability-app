@@ -140,3 +140,125 @@ app.post('/saveConfiguration', function(request, response) {
   });
   
 });
+
+
+app.get('/loadTouches', function(request, response) {
+  var JSONresults = {
+    items: []
+  };
+  console.log('GET received');
+  base('Touch Points').select({
+    // Selecting the first 3 records in Main View:
+    view: "Main View"
+  }).eachPage(function page(records, fetchNextPage) {
+
+    // This function (`page`) will get called for each page of records.
+
+    records.forEach(function(record) {
+      console.log('Retrieved ', record.get('Name'));
+      JSONresults.items.push({
+        'id': record.getId(),
+        'name': record.get('Name'),
+        'x-pos': record.get('X Position'),
+        'y-pos': record.get('Y Position'),
+		'time': record.get('Time'),
+        'combo': record.get('Combo'),
+        'size': record.get('Size'),
+		'space': record.get('Space'),
+		'quadrant': record.get('Quadrant'),
+		'trial': record.get('Trial'),
+		'details': record.get('Details')
+      });
+    });
+
+    // To fetch the next page of records, call `fetchNextPage`.
+    // If there are more records, `page` will get called again.
+    // If there are no more records, `done` will get called.
+    fetchNextPage();
+
+  }, function done(error) {
+    if (error) {
+      console.log(error);
+      response.send(error);
+    } else {
+      response.send(JSON.stringify(JSONresults));
+    }
+  });
+  //response.send('done');
+});
+
+// Saves endorsement changes to Airtable
+app.post('/saveTouches', function(request, response) {
+  console.log('POST received');
+  if (typeof request.body == 'undefined') {
+	console.log('request body is undefined');
+	response.send('undefined body');
+  }
+  console.log(request.body);
+  //var result = (JSON.parse(request.body.result)).items;
+  var results = (JSON.parse(request.body.result)).items;
+  async.each(results, function(result, callback) {
+	  // save new result
+    if ((typeof result.id == 'undefined') ||
+      (result.id == '')) {
+	  console.log('creating new entry');
+      base('Touch Points').create({
+		
+        "Name": result['name'],
+        "X Position": result['x-pos'],
+        "Y Position": result['y-pos'],
+        "Time": result['time'],
+        "Combo": result['combo'],
+		"Size": result['size'],
+		"Space": result['space'],
+		"Quadrant": result['quandrant'],
+		"Trial": result['trial'],
+		"Details": result['details']
+		
+      }, function(err, record) {
+        if (err) {
+          console.log(err);
+		  callback(err);
+          return;
+        }
+        console.log('done creating new entry');
+        callback(null, 'success');
+      });
+    } else {
+      // update old entry
+	  console.log('updating old entry');
+      base('Touch Points').replace(result.id, {
+        
+		"Name": result['name'],
+        "X Position": result['x-pos'],
+        "Y Position": result['y-pos'],
+        "Time": result['time'],
+        "Combo": result['combo'],
+		"Size": result['size'],
+		"Space": result['space'],
+		"Quadrant": result['quandrant'],
+		"Trial": result['trial'],
+		"Details": result['details']
+		
+      }, function(err, record) {
+        if (err) {
+          console.log(err);
+		  callback(err);
+          return;
+        }
+        console.log('done replacing entry');
+        callback(null, 'success');
+      });
+    }
+  }, function (error) {
+    if (error) {
+		console.log('Error: ' + error);
+		response.send('Error: ' + error);
+		return;
+	} else {
+		console.log('done replacing all entries');
+        response.send('done replacing all entries');
+	}
+  });
+  
+});

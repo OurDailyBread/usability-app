@@ -197,6 +197,12 @@ app.post('/saveTouches', function(request, response) {
 
   var prevTouches = [];
   var results = (JSON.parse(request.body.result)).items;
+  
+  for (var key in results) {
+	  if (typeof results[key] == 'undefined') {
+		  results[key] = '';
+	  }
+  }
 
   async.series([
       // load all previous touches

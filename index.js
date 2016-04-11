@@ -234,6 +234,7 @@ app.post('/saveTouches', function(request, response) {
           if (error) {
             console.log(error);
             callback2(error);
+			return;
           } else {
             console.log('all previous touches loaded');
             callback2(null, 'loading succeeded');
@@ -243,6 +244,7 @@ app.post('/saveTouches', function(request, response) {
       },
       function(callback2) {
 		// create new touches or update previous ones
+		console.log('preparing to write to Airtable');
         async.each(results, function(result, callback) {
           // save new result
 		  var id = 'none';

@@ -254,6 +254,7 @@ app.post('/saveTouches', function(request, response) {
         async.each(results, function(result, callback) {
           // save new result
 		  var id = 'none';
+		  console.log('loading result into data object');
 		  for (var index in prevTouches) {
 			  if ((prevTouches[index].combo == result['combo']) &&
 			      (prevTouches[index].quadrant == result['quadrant']) &&

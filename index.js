@@ -279,7 +279,7 @@ app.post('/saveTouches', function(request, response) {
               "Details": result['details'] ? result['details'] : ''
 			};
 			console.log(newEntry);
-            base('Touch Points').create(newEntry(), function(err, record) {
+            base('Touch Points').create(newEntry, function(err, record) {
               if (err) {
                 console.log(err);
                 callback(err);

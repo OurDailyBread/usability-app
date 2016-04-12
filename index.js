@@ -255,6 +255,21 @@ app.post('/saveTouches', function(request, response) {
           // save new result
 		  var id = 'none';
 		  console.log('loading result into data object');
+		  var newEntry = {
+
+              "Name": result['name'] ? result['name'] : '',
+              "X Position": result['x-pos'] ? result['x-pos'] : '',
+              "Y Position": result['y-pos'] ? result['y-pos'] : '',
+              "Time": result['time'] ? result['time'] : '',
+              "Combo": result['combo'] ? result['combo'] : '',
+              "Size": result['size'] ? result['size'] : '',
+              "Space": result['space'] ? result['space'] : '',
+              "Quadrant": result['quadrant'] ? result['quadrant'] : '',
+              "Trial": result['trial'] ? result['trial'] : '',
+              "Details": result['details'] ? result['details'] : ''
+		  };
+		  console.log(newEntry);
+			
 		  for (var index in prevTouches) {
 			  if ((prevTouches[index].combo == result['combo']) &&
 			      (prevTouches[index].quadrant == result['quadrant']) &&
@@ -265,20 +280,8 @@ app.post('/saveTouches', function(request, response) {
 		  }
           if (id == 'none') {
             console.log('creating new entry');
-			var newEntry = {
 
-              "Name": result['name'] ? result['name'] : '',
-              "X Position": result['x-pos'] ? result['x-pos'] : '',
-              "Y Position": result['y-pos'] ? result['y-pos'] : '',
-              "Time": result['time'] ? result['time'] : '',
-              "Combo": result['combo'] ? result['combo'] : '',
-              "Size": result['size'] ? result['size'] : '',
-              "Space": result['space'] ? result['space'] : '',
-              "Quadrant": result['quandrant'] ? result['quandrant'] : '',
-              "Trial": result['trial'] ? result['trial'] : ''//,
-              //"Details": result['details'] ? result['details'] : ''
-			};
-			console.log(newEntry);
+			
             base('Touch Points').create(newEntry, function(err, record) {
               if (err) {
                 console.log(err);
@@ -291,20 +294,8 @@ app.post('/saveTouches', function(request, response) {
           } else {
             // update old entry
             console.log('updating old entry');
-            base('Touch Points').replace(id, {
-
-              "Name": result['name'],
-              "X Position": result['x-pos'],
-              "Y Position": result['y-pos'],
-              "Time": result['time'],
-              "Combo": result['combo'],
-              "Size": result['size'],
-              "Space": result['space'],
-              "Quadrant": result['quandrant'],
-              "Trial": result['trial'],
-              "Details": result['details']
-
-            }, function(err, record) {
+			
+            base('Touch Points').replace(id, newEntry, function(err, record) {
               if (err) {
                 console.log(err);
                 callback(err);

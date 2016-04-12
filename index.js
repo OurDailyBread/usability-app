@@ -267,32 +267,19 @@ app.post('/saveTouches', function(request, response) {
             console.log('creating new entry');
 			var newEntry = {
 
-              "Name": result['name'],
-              "X Position": result['x-pos'],
-              "Y Position": result['y-pos'],
-              "Time": result['time'],
-              "Combo": result['combo'],
-              "Size": result['size'],
-              "Space": result['space'],
-              "Quadrant": result['quandrant'],
-              "Trial": result['trial'],
-              "Details": result['details']
+              "Name": result['name'] ? result['name'] : '',
+              "X Position": result['x-pos'] ? result['x-pos'] : '',
+              "Y Position": result['y-pos'] ? result['y-pos'] : '',
+              "Time": result['time'] ? result['time'] : '',
+              "Combo": result['combo'] ? result['combo'] : '',
+              "Size": result['size'] ? result['size'] : '',
+              "Space": result['space'] ? result['space'] : '',
+              "Quadrant": result['quandrant'] ? result['quandrant'] : '',
+              "Trial": result['trial'] ? result['trial'] : '',
+              "Details": result['details'] ? result['details'] : ''
 			};
 			console.log(newEntry);
-            base('Touch Points').create({
-
-              "Name": result['name'],
-              "X Position": result['x-pos'],
-              "Y Position": result['y-pos'],
-              "Time": result['time'],
-              "Combo": result['combo'],
-              "Size": result['size'],
-              "Space": result['space'],
-              "Quadrant": result['quandrant'],
-              "Trial": result['trial'],
-              "Details": result['details']
-
-            }, function(err, record) {
+            base('Touch Points').create(newEntry(), function(err, record) {
               if (err) {
                 console.log(err);
                 callback(err);

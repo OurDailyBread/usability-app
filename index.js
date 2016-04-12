@@ -275,8 +275,8 @@ app.post('/saveTouches', function(request, response) {
               "Size": result['size'] ? result['size'] : '',
               "Space": result['space'] ? result['space'] : '',
               "Quadrant": result['quandrant'] ? result['quandrant'] : '',
-              "Trial": result['trial'] ? result['trial'] : '',
-              "Details": result['details'] ? result['details'] : ''
+              "Trial": result['trial'] ? result['trial'] : ''//,
+              //"Details": result['details'] ? result['details'] : ''
 			};
 			console.log(newEntry);
             base('Touch Points').create(newEntry, function(err, record) {

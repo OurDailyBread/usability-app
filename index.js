@@ -37,7 +37,7 @@ app.get('/loadConfiguration', function(request, response) {
   var JSONresults = {
     items: []
   };
-  console.log('GET received');
+  console.log('GET received for load Configuration');
   base('Configuration Table').select({
     // Selecting the first 3 records in Main View:
     view: "Main View"
@@ -145,7 +145,7 @@ app.get('/loadTouches', function(request, response) {
   var JSONresults = {
     items: []
   };
-  console.log('GET received');
+  console.log('GET received for loadTouches');
   base('Touch Points').select({
     // Selecting the first 3 records in Main View:
     view: "Main View"

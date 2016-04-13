@@ -150,7 +150,7 @@ app.get('/loadTouches', function(request, response) {
     // Selecting the first 3 records in Main View:
     view: "Main View"
   }).eachPage(function page(records, fetchNextPage) {
-    console('new page loaded');
+    console.log('new page loaded');
     // This function (`page`) will get called for each page of records.
 
     records.forEach(function(record) {

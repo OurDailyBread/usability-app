@@ -206,6 +206,8 @@ app.post('/saveTouches', function(request, response) {
 	  }
 	  results[index][key] = results[index][key].toString(); // Data types are all strings
 	  }
+	  console.log('updated result');
+	  console.log(results[index]);
   }
   console.log('updated results');
   console.log(results);

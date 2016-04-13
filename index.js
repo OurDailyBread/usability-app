@@ -270,7 +270,7 @@ app.post('/saveTouches', function(request, response) {
               "Space": result['space'] ? result['space'] : '',
               "Quadrant": result['quadrant'] ? result['quadrant'] : '',
               "Trial": result['trial'] ? result['trial'] : '',
-              "Details": result['details'] ? result['details'] : ''
+              "Details": result['details'] ? JSON.stringify(result['details']) : ''
 		  };
 		  console.log(newEntry);
 			

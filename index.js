@@ -204,7 +204,13 @@ app.post('/saveTouches', function(request, response) {
 		  if (typeof results[index][key] == 'undefined') {
 		  results[index][key] = '';
 	  }
-	  results[index][key] = results[index][key].toString(); // Data types are all strings
+	  if (key == 'Details') {
+		  results[index][key] = JSON.stringify(results[index][key]);
+	  } else {
+		  // Convert numeric to string to match string types in Airtable database
+		  results[index][key] = results[index][key].toString(); 
+	  }
+	  
 	  }
 	  console.log('updated result');
 	  console.log(results[index]);
@@ -273,7 +279,7 @@ app.post('/saveTouches', function(request, response) {
               "Space": result['space'] ? result['space'] : '',
               "Quadrant": result['quadrant'] ? result['quadrant'] : '',
               "Trial": result['trial'] ? result['trial'] : '',
-              "Details": result['details'] ? JSON.stringify(result['details']) : ''
+              "Details": result['details'] ? result['details'] : ''
 		  };
 		  console.log(newEntry);
 			

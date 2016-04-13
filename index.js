@@ -198,6 +198,7 @@ app.post('/saveTouches', function(request, response) {
   var prevTouches = [];
   var results = (JSON.parse(request.body.result)).items;
   
+  console.log('assigning undefined objects to blank string');
   for (var index in results) {
 	  for (var key in results[index]) {
 		  if (typeof results[index][key] == 'undefined') {

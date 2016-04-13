@@ -198,11 +198,13 @@ app.post('/saveTouches', function(request, response) {
   var prevTouches = [];
   var results = (JSON.parse(request.body.result)).items;
   
-  for (var key in results) {
-	  if (typeof results[key] == 'undefined') {
-		  results[key] = '';
+  for (var index in results) {
+	  for (var key in results[index]) {
+		  if (typeof results[index][key] == 'undefined') {
+		  results[index][key] = '';
 	  }
-	  results[key] = results[key].toString(); // Data types are all strings
+	  results[index][key] = results[index][key].toString(); // Data types are all strings
+	  }
   }
   console.log('updated results');
   console.log(results);

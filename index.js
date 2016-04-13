@@ -202,6 +202,7 @@ app.post('/saveTouches', function(request, response) {
 	  if (typeof results[key] == 'undefined') {
 		  results[key] = '';
 	  }
+	  results[key] = results[key].toString(); // Data types are all strings
   }
 
   async.series([

@@ -204,7 +204,7 @@ app.post('/saveTouches', function(request, response) {
 		  if (typeof results[index][key] == 'undefined') {
 		  results[index][key] = '';
 	  }
-	  if (key == 'Details') {
+	  if (key == 'details') {
 		  results[index][key] = JSON.stringify(results[index][key]);
 	  } else {
 		  // Convert numeric to string to match string types in Airtable database

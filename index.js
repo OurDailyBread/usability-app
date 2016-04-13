@@ -150,7 +150,7 @@ app.get('/loadTouches', function(request, response) {
     // Selecting the first 3 records in Main View:
     view: "Main View"
   }).eachPage(function page(records, fetchNextPage) {
-
+    console('new page loaded');
     // This function (`page`) will get called for each page of records.
 
     records.forEach(function(record) {
@@ -215,8 +215,8 @@ app.post('/saveTouches', function(request, response) {
 	  console.log('updated result');
 	  console.log(results[index]);
   }
-  console.log('updated results');
-  console.log(results);
+  //console.log('updated results');
+  //console.log(results);
   async.series([
       // load all previous touches
       function(callback2) {

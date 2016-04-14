@@ -166,7 +166,7 @@ app.get('/loadTouches', function(request, response) {
         'size': record.get('Size'),
         'space': record.get('Space'),
         'quadrant': record.get('Quadrant'),
-        'trial': record.get('Trial'),
+        'round': record.get('Round'),
         'details': record.get('Details')
       });
     });
@@ -241,7 +241,7 @@ app.post('/saveTouches', function(request, response) {
               'size': record.get('Size'),
               'space': record.get('Space'),
               'quadrant': record.get('Quadrant'),
-              'trial': record.get('Trial'),
+              'round': record.get('Round'),
               'details': record.get('Details')
             });
           });
@@ -281,7 +281,7 @@ app.post('/saveTouches', function(request, response) {
               "Size": result['size'] ? result['size'] : '',
               "Space": result['space'] ? result['space'] : '',
               "Quadrant": result['quadrant'] ? result['quadrant'] : '',
-              "Trial": result['trial'] ? result['trial'] : '',
+              "Round": result['round'] ? result['round'] : '',
               "Details": result['details'] ? result['details'] : ''
 		  };
 		  console.log(newEntry);
@@ -289,7 +289,7 @@ app.post('/saveTouches', function(request, response) {
 		  for (var index in prevTouches) {
 			  if ((prevTouches[index].combo == result['combo']) &&
 			      (prevTouches[index].quadrant == result['quadrant']) &&
-				  (prevTouches[index].trial == result['trial']))
+				  (prevTouches[index].round == result['round']))
 				  {
 					  id = prevTouches[index].id;
 				  }

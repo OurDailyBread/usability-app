@@ -154,7 +154,7 @@ app.get('/loadTouches', function(request, response) {
     // This function (`page`) will get called for each page of records.
 
     records.forEach(function(record) {
-      console.log('Retrieved ', record.get('Name'));
+      console.log('Retrieved ' + record.get('Name') + ' for ' + record.get('pID'));
       JSONresults.items.push({
         'id': record.getId(),
         'name': record.get('Name'),

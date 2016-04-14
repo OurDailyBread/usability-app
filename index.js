@@ -158,6 +158,7 @@ app.get('/loadTouches', function(request, response) {
       JSONresults.items.push({
         'id': record.getId(),
         'name': record.get('Name'),
+		'pID': record.get('pID'),
         'x-pos': record.get('X Position'),
         'y-pos': record.get('Y Position'),
         'time': record.get('Time'),
@@ -232,6 +233,7 @@ app.post('/saveTouches', function(request, response) {
             prevTouches.push({
               'id': record.getId(),
               'name': record.get('Name'),
+			  'pID': record.get('pID'),
               'x-pos': record.get('X Position'),
               'y-pos': record.get('Y Position'),
               'time': record.get('Time'),
@@ -271,6 +273,7 @@ app.post('/saveTouches', function(request, response) {
 		  var newEntry = {
 
               "Name": result['name'] ? result['name'] : '',
+			  "pID": result['pID'] ? result['pID'] : '',
               "X Position": result['x-pos'] ? result['x-pos'] : '',
               "Y Position": result['y-pos'] ? result['y-pos'] : '',
               "Time": result['time'] ? result['time'] : '',

@@ -147,7 +147,7 @@ app.get('/loadTouches', function(request, response) {
   };
   console.log('GET received for loadTouches');
   
-  var pID = req.query.id;
+  var pID = request.query.id;
   console.log('loading touches for pID: ' + pID);
   
   base('Touch Points').select({

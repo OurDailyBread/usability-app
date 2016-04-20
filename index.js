@@ -287,7 +287,8 @@ app.post('/saveTouches', function(request, response) {
 		  console.log(newEntry);
 			
 		  for (var index in prevTouches) {
-			  if ((prevTouches[index].combo == result['combo']) &&
+			  if ((prevTouches[index].pID == result['pID'])&&
+			      (prevTouches[index].combo == result['combo']) &&
 			      (prevTouches[index].quadrant == result['quadrant']) &&
 				  (prevTouches[index].round == result['round']))
 				  {

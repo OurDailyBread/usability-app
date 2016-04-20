@@ -146,6 +146,10 @@ app.get('/loadTouches', function(request, response) {
     items: []
   };
   console.log('GET received for loadTouches');
+  
+  var pID = req.query.id;
+  console.log('loading touches for pID: ' + pID);
+  
   base('Touch Points').select({
     // Selecting the first 3 records in Main View:
     view: "Main View"
@@ -154,21 +158,24 @@ app.get('/loadTouches', function(request, response) {
     // This function (`page`) will get called for each page of records.
 
     records.forEach(function(record) {
-      console.log('Retrieved ' + record.get('Name') + ' for ' + record.get('pID'));
-      JSONresults.items.push({
-        'id': record.getId(),
-        'name': record.get('Name'),
-		'pID': record.get('pID'),
-        'x-pos': record.get('X Position'),
-        'y-pos': record.get('Y Position'),
-        'time': record.get('Time'),
-        'combo': record.get('Combo'),
-        'size': record.get('Size'),
-        'space': record.get('Space'),
-        'quadrant': record.get('Quadrant'),
-        'round': record.get('Round'),
-        'details': record.get('Details')
-      });
+	  if ((pID == 'all') || (pID == record.get('pID')) {
+	  
+		console.log('Retrieved ' + record.get('Name') + ' for ' + record.get('pID'));
+		JSONresults.items.push({
+			'id': record.getId(),
+			'name': record.get('Name'),
+			'pID': record.get('pID'),
+			'x-pos': record.get('X Position'),
+			'y-pos': record.get('Y Position'),
+			'time': record.get('Time'),
+			'combo': record.get('Combo'),
+			'size': record.get('Size'),
+			'space': record.get('Space'),
+			'quadrant': record.get('Quadrant'),
+			'round': record.get('Round'),
+			'details': record.get('Details')
+		});
+	  }
     });
 
     // To fetch the next page of records, call `fetchNextPage`.

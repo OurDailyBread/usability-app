@@ -35,14 +35,14 @@ var base = Airtable.base('appQGPt8lnDSPI25o');
 
 app.get('/loadConfiguration', function(request, response) {
   var JSONresults = {
-    items: []
+    items: [],
+	randomSequences = []
   };
-  var randomSequences = [];
   console.log('GET received for load Configuration');
 
   async.series([
       function(callback) {
-		  loadRandomSequence(randomSequences, pID, callback);
+		  loadRandomSequence(JSONresults.randomSequences, pID, callback);
 	  },
       function(callback) {
         base('Configuration Table').select({
@@ -388,7 +388,7 @@ function loadRandomSequence(randomSequences, pID, callback) {
     // This function (`page`) will get called for each page of records.
 
     records.forEach(function(record) {
-      console.log('Retrieved ', record.get('pID'));
+      console.log('Retrieved ' + record.get('pID') + ' sequence ' + record.get('Random Sequence').toString());
 	  var recordJSON = {
 		  id: recordgetId(),
 		  pID: record.get('pID'),
@@ -407,6 +407,7 @@ function loadRandomSequence(randomSequences, pID, callback) {
       console.log(error);
       callback(error);
     } else {
+	  console.log('done loading all random sequences');
       callback(null, 'done replacing all entries');
     }
   });

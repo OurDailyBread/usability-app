@@ -37,42 +37,66 @@ app.get('/loadConfiguration', function(request, response) {
   var JSONresults = {
     items: []
   };
+  var randomSequences = [];
   console.log('GET received for load Configuration');
-  base('Configuration Table').select({
-    // Selecting the first 3 records in Main View:
-    view: "Main View"
-  }).eachPage(function page(records, fetchNextPage) {
 
-    // This function (`page`) will get called for each page of records.
+  async.series([
+      function(callback) {
+		  loadRandomSequence(randomSequences, pID, callback);
+	  },
+      function(callback) {
+        base('Configuration Table').select({
+          // Selecting the first 3 records in Main View:
+          view: "Main View"
+        }).eachPage(function page(records, fetchNextPage) {
 
-    records.forEach(function(record) {
-      console.log('Retrieved ', record.get('Name'));
-      JSONresults.items.push({
-        'id': record.getId(),
-        'name': record.get('Name'),
-        'type': record.get('Type'),
-        'x-pos': record.get('X Position'),
-        'y-pos': record.get('Y Position'),
-        'size-x': record.get('Size X'),
-        'size-y': record.get('Size Y'),
-        'padding': record.get('Padding')
-      });
-    });
+          // This function (`page`) will get called for each page of records.
 
-    // To fetch the next page of records, call `fetchNextPage`.
-    // If there are more records, `page` will get called again.
-    // If there are no more records, `done` will get called.
-    fetchNextPage();
+          records.forEach(function(record) {
+            console.log('Retrieved ', record.get('Name'));
+            JSONresults.items.push({
+              'id': record.getId(),
+              'name': record.get('Name'),
+              'type': record.get('Type'),
+              'x-pos': record.get('X Position'),
+              'y-pos': record.get('Y Position'),
+              'size-x': record.get('Size X'),
+              'size-y': record.get('Size Y'),
+              'padding': record.get('Padding')
+            });
+          });
 
-  }, function done(error) {
-    if (error) {
-      console.log(error);
-      response.send(error);
-    } else {
-      response.send(JSON.stringify(JSONresults));
+          // To fetch the next page of records, call `fetchNextPage`.
+          // If there are more records, `page` will get called again.
+          // If there are no more records, `done` will get called.
+          fetchNextPage();
+
+        }, function done(error) {
+          if (error) {
+            console.log(error);
+            response.send(error);
+          } else {
+            callback(null,'success');
+          }
+        });
+
+      }
+    ],
+    function(err, results) {
+      console.log('finishing async');
+      if (err) {
+        console.log('Async Error: ' + err);
+        response.send('Error: ' + err);
+      } else {
+		  var combinedResult = {
+			  results: JSONresults,
+			  randomSequences: randomSequence
+		  }
+		  response.send(JSON.stringify(JSONresults));
+	  }
     }
-  });
-  //response.send('done');
+  );
+
 });
 
 // Saves endorsement changes to Airtable
@@ -146,10 +170,10 @@ app.get('/loadTouches', function(request, response) {
     items: []
   };
   console.log('GET received for loadTouches');
-  
+
   var pID = request.query.pID;
   console.log('loading touches for pID: ' + pID);
-  
+
   base('Touch Points').select({
     // Selecting the first 3 records in Main View:
     view: "Main View"
@@ -158,24 +182,24 @@ app.get('/loadTouches', function(request, response) {
     // This function (`page`) will get called for each page of records.
 
     records.forEach(function(record) {
-	  if ((pID == 'all') || (pID == record.get('pID'))) {
-	  
-		console.log('Retrieved ' + record.get('Name') + ' for ' + record.get('pID'));
-		JSONresults.items.push({
-			'id': record.getId(),
-			'name': record.get('Name'),
-			'pID': record.get('pID'),
-			'x-pos': record.get('X Position'),
-			'y-pos': record.get('Y Position'),
-			'time': record.get('Time'),
-			'combo': record.get('Combo'),
-			'size': record.get('Size'),
-			'space': record.get('Space'),
-			'quadrant': record.get('Quadrant'),
-			'round': record.get('Round'),
-			'details': record.get('Details')
-		});
-	  }
+      if ((pID == 'all') || (pID == record.get('pID'))) {
+
+        console.log('Retrieved ' + record.get('Name') + ' for ' + record.get('pID'));
+        JSONresults.items.push({
+          'id': record.getId(),
+          'name': record.get('Name'),
+          'pID': record.get('pID'),
+          'x-pos': record.get('X Position'),
+          'y-pos': record.get('Y Position'),
+          'time': record.get('Time'),
+          'combo': record.get('Combo'),
+          'size': record.get('Size'),
+          'space': record.get('Space'),
+          'quadrant': record.get('Quadrant'),
+          'round': record.get('Round'),
+          'details': record.get('Details')
+        });
+      }
     });
 
     // To fetch the next page of records, call `fetchNextPage`.
@@ -205,23 +229,23 @@ app.post('/saveTouches', function(request, response) {
 
   var prevTouches = [];
   var results = (JSON.parse(request.body.result)).items;
-  
+
   console.log('assigning undefined objects to blank string');
   for (var index in results) {
-	  for (var key in results[index]) {
-		  if (typeof results[index][key] == 'undefined') {
-		  results[index][key] = '';
-	  }
-	  if (key == 'details') {
-		  results[index][key] = JSON.stringify(results[index][key]);
-	  } else {
-		  // Convert numeric to string to match string types in Airtable database
-		  results[index][key] = results[index][key].toString(); 
-	  }
-	  
-	  }
-	  console.log('updated result');
-	  console.log(results[index]);
+    for (var key in results[index]) {
+      if (typeof results[index][key] == 'undefined') {
+        results[index][key] = '';
+      }
+      if (key == 'details') {
+        results[index][key] = JSON.stringify(results[index][key]);
+      } else {
+        // Convert numeric to string to match string types in Airtable database
+        results[index][key] = results[index][key].toString();
+      }
+
+    }
+    console.log('updated result');
+    console.log(results[index]);
   }
   //console.log('updated results');
   //console.log(results);
@@ -240,7 +264,7 @@ app.post('/saveTouches', function(request, response) {
             prevTouches.push({
               'id': record.getId(),
               'name': record.get('Name'),
-			  'pID': record.get('pID'),
+              'pID': record.get('pID'),
               'x-pos': record.get('X Position'),
               'y-pos': record.get('Y Position'),
               'time': record.get('Time'),
@@ -262,7 +286,7 @@ app.post('/saveTouches', function(request, response) {
           if (error) {
             console.log(error);
             callback2(error);
-			return;
+            return;
           } else {
             console.log('all previous touches loaded');
             callback2(null, 'loading succeeded');
@@ -271,41 +295,39 @@ app.post('/saveTouches', function(request, response) {
 
       },
       function(callback2) {
-		// create new touches or update previous ones
-		console.log('preparing to write to Airtable');
+        // create new touches or update previous ones
+        console.log('preparing to write to Airtable');
         async.each(results, function(result, callback) {
           // save new result
-		  var id = 'none';
-		  console.log('loading result into data object');
-		  var newEntry = {
+          var id = 'none';
+          console.log('loading result into data object');
+          var newEntry = {
 
-              "Name": result['name'] ? result['name'] : '',
-			  "pID": result['pID'] ? result['pID'] : '',
-              "X Position": result['x-pos'] ? result['x-pos'] : '',
-              "Y Position": result['y-pos'] ? result['y-pos'] : '',
-              "Time": result['time'] ? result['time'] : '',
-              "Combo": result['combo'] ? result['combo'] : '',
-              "Size": result['size'] ? result['size'] : '',
-              "Space": result['space'] ? result['space'] : '',
-              "Quadrant": result['quadrant'] ? result['quadrant'] : '',
-              "Round": result['round'] ? result['round'] : '',
-              "Details": result['details'] ? result['details'] : ''
-		  };
-		  console.log(newEntry);
-			
-		  for (var index in prevTouches) {
-			  if ((prevTouches[index].pID == result['pID'])&&
-			      (prevTouches[index].combo == result['combo']) &&
-			      (prevTouches[index].quadrant == result['quadrant']) &&
-				  (prevTouches[index].round == result['round']))
-				  {
-					  id = prevTouches[index].id;
-				  }
-		  }
+            "Name": result['name'] ? result['name'] : '',
+            "pID": result['pID'] ? result['pID'] : '',
+            "X Position": result['x-pos'] ? result['x-pos'] : '',
+            "Y Position": result['y-pos'] ? result['y-pos'] : '',
+            "Time": result['time'] ? result['time'] : '',
+            "Combo": result['combo'] ? result['combo'] : '',
+            "Size": result['size'] ? result['size'] : '',
+            "Space": result['space'] ? result['space'] : '',
+            "Quadrant": result['quadrant'] ? result['quadrant'] : '',
+            "Round": result['round'] ? result['round'] : '',
+            "Details": result['details'] ? result['details'] : ''
+          };
+          console.log(newEntry);
+
+          for (var index in prevTouches) {
+            if ((prevTouches[index].pID == result['pID']) &&
+              (prevTouches[index].combo == result['combo']) &&
+              (prevTouches[index].quadrant == result['quadrant']) &&
+              (prevTouches[index].round == result['round'])) {
+              id = prevTouches[index].id;
+            }
+          }
           if (id == 'none') {
             console.log('creating new entry');
 
-			
             base('Touch Points').create(newEntry, function(err, record) {
               if (err) {
                 console.log(err);
@@ -318,7 +340,7 @@ app.post('/saveTouches', function(request, response) {
           } else {
             // update old entry
             console.log('updating old entry');
-			
+
             base('Touch Points').replace(id, newEntry, function(err, record) {
               if (err) {
                 console.log(err);
@@ -355,3 +377,37 @@ app.post('/saveTouches', function(request, response) {
     });
 
 });
+
+function loadRandomSequence(randomSequences, pID, callback) {
+
+  base('Random Sequence').select({
+    // Selecting the records in Main View:
+    view: "Main View"
+  }).eachPage(function page(records, fetchNextPage) {
+
+    // This function (`page`) will get called for each page of records.
+
+    records.forEach(function(record) {
+      console.log('Retrieved ', record.get('pID'));
+	  var recordJSON = {
+		  id: recordgetId(),
+		  pID: record.get('pID'),
+		  randomSequence: record.get('Random Sequence')
+	  }
+      randomSequences.push(recordJSON);
+    });
+
+    // To fetch the next page of records, call `fetchNextPage`.
+    // If there are more records, `page` will get called again.
+    // If there are no more records, `done` will get called.
+    fetchNextPage();
+
+  }, function done(error) {
+    if (error) {
+      console.log(error);
+      callback(error);
+    } else {
+      callback(null, 'done replacing all entries');
+    }
+  });
+}

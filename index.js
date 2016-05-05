@@ -36,7 +36,7 @@ var base = Airtable.base('appQGPt8lnDSPI25o');
 app.get('/loadConfiguration', function(request, response) {
   var JSONresults = {
     items: [],
-	randomSequences = []
+	randomSequences: []
   };
   console.log('GET received for load Configuration');
 

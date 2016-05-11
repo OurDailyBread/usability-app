@@ -188,7 +188,7 @@ app.get('/loadTouches', function(request, response) {
     records.forEach(function(record) {
       if ((pID == 'all') || (pID == record.get('Participant ID'))) {
 
-        console.log('Retrieved ' + record.get('Name') + ' for ' + record.get('pID'));
+        console.log('Retrieved ' + record.get('Name') + ' for ' + record.get('Participant ID'));
         JSONresults.items.push({
           'id': record.getId(),
           'name': record.get('Name'),

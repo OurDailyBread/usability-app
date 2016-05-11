@@ -218,6 +218,8 @@ app.get('/loadTouches', function(request, response) {
       console.log(error);
       response.send(error);
     } else {
+	  console.log('completed loading.  sending to webpage');
+	  console.loog(JSON.stringify(JSONresults));
       response.send(JSON.stringify(JSONresults));
     }
   });

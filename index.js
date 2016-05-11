@@ -318,9 +318,9 @@ app.post('/saveTouches', function(request, response) {
 
             "Name": result['name'] ? result['name'] : '',
             "Participant ID": result['pID'] ? result['pID'] : '',
-			"Trial number": result['trialNumber'] ? result['trialNumber'] : '',
+			"Trial number": result['trialNumber'] ? result['trialNumber'] : 0,
 			"Stimulus number": result['combo'] ? result['combo'] : '',
-			"Target location": result['targetLocation'] ? result['targetLocation'] : '',
+			"Target location": result['targetLocation'] ? result['targetLocation'] : 0,
 			"Target width/diameter": result['size'] ? result['size'] : '',
 			"Target spacing": result['space'] ? result['space'] : '',
 			"Hit time ms": result['time'] ? result['time'] : '',

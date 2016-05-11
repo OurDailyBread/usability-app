@@ -335,8 +335,8 @@ app.post('/saveTouches', function(request, response) {
           for (var index in prevTouches) {
             if ((prevTouches[index].pID == result['pID']) &&
               (prevTouches[index].combo == result['combo']) &&
-              (prevTouches[index].quadrant == result['quadrant']) &&
-              (prevTouches[index].round == result['round'])) {
+              (prevTouches[index].details[quadrant] == result.details['quadrant']) &&
+              (prevTouches[index].details[round] == result.details['round'])) {
               id = prevTouches[index].id;
             }
           }

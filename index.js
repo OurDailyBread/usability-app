@@ -192,15 +192,17 @@ app.get('/loadTouches', function(request, response) {
         JSONresults.items.push({
           'id': record.getId(),
           'name': record.get('Name'),
-          'pID': record.get('pID'),
-          'x-pos': record.get('X Position'),
-          'y-pos': record.get('Y Position'),
-          'time': record.get('Time'),
-          'combo': record.get('Combo'),
-          'size': record.get('Size'),
-          'space': record.get('Space'),
-          'quadrant': record.get('Quadrant'),
-          'round': record.get('Round'),
+          'pID': record.get('Participant ID'),
+		  'trialNumber': record.get('Trial number'),
+		  'combo': record.get('Stimulus number'),
+		  'targetLocation': record.get('Target location'),
+		  'size': record.get('Target width/diameter'),
+		  'space': record.get('Target spacing'),
+          'time': record.get('Hit time ms'),      		  
+		  'x-pos': record.get('Touch X p'),
+          'y-pos': record.get('Touch Y p'),
+		  'x-pos-mm': record.get('Touch X mm'), // Not used in app (data uploaded for later analysis)
+          'y-pos-mm': record.get('Touch Y mm'), // Not used in app (data uploaded for later analysis)
           'details': record.get('Details')
         });
       }
@@ -273,17 +275,17 @@ app.post('/saveTouches', function(request, response) {
             prevTouches.push({
               'id': record.getId(),
               'name': record.get('Name'),
-              'pID': record.get('pID'),
-              'x-pos': record.get('X Position'),
-              'y-pos': record.get('Y Position'),
+              'pID': record.get('Participant ID'),
+			  'trialNumber': record.get('Trial Number'),
+			  'combo': record.get('Stimulus Number'),
+			  'targetLocation': record.get('Target location'),
+			  'size': record.get('Target width/diameter'),
+			  'space': record.get('Target spacing'),
+			  'time': record.get('Hit time ms'),
+              'x-pos': record.get('Touch X p'),
+              'y-pos': record.get('Touch Y p'),
 			  'x-pos-mm': record.get('Touch X mm'),
               'y-pos-mm': record.get('Touch Y mm'),
-              'time': record.get('Time'),
-              'combo': record.get('Combo'),
-              'size': record.get('Size'),
-              'space': record.get('Space'),
-              'quadrant': record.get('Quadrant'),
-              'round': record.get('Round'),
               'details': record.get('Details')
             });
           });
@@ -315,17 +317,17 @@ app.post('/saveTouches', function(request, response) {
           var newEntry = {
 
             "Name": result['name'] ? result['name'] : '',
-            "pID": result['pID'] ? result['pID'] : '',
-            "X Position": result['x-pos'] ? result['x-pos'] : '',
-            "Y Position": result['y-pos'] ? result['y-pos'] : '',
+            "Participant ID": result['pID'] ? result['pID'] : '',
+			"Trial number": result['trialNumber'] ? result['trialNumber'] : '',
+			"Stimulus number": result['combo'] ? result['combo'] : '',
+			"Target location": result['targetLocation'] ? result['targetLocation'] : '',
+			"Target width/diameter": result['size'] ? result['size'] : '',
+			"Target spacing": result['space'] ? result['space'] : '',
+			"Hit time ms": result['time'] ? result['time'] : '',
+            "Touch X p": result['x-pos'] ? result['x-pos'] : '',
+            "Touch Y p": result['y-pos'] ? result['y-pos'] : '',
 			"Touch X mm": result['x-pos-mm'] ? result['x-pos-mm'] : '',
             "Touch Y mm": result['y-pos-mm'] ? result['y-pos-mm'] : '',
-            "Time": result['time'] ? result['time'] : '',
-            "Combo": result['combo'] ? result['combo'] : '',
-            "Size": result['size'] ? result['size'] : '',
-            "Space": result['space'] ? result['space'] : '',
-            "Quadrant": result['quadrant'] ? result['quadrant'] : '',
-            "Round": result['round'] ? result['round'] : '',
             "Details": result['details'] ? result['details'] : ''
           };
           console.log(newEntry);

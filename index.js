@@ -170,11 +170,15 @@ app.get('/loadTouches', function(request, response) {
     items: []
   };
   console.log('GET received for loadTouches');
+  
+  var experimentType = request.query.experimentType;
+  console.log('loading touches for experimentType: ' + experimentType);
+  
 
   var pID = request.query.pID;
   console.log('loading touches for pID: ' + pID);
 
-  base('Touch Points').select({
+  base('Touch Points (' + experimentType + ')').select({
     // Selecting the first 3 records in Main View:
     view: "Main View"
   }).eachPage(function page(records, fetchNextPage) {
@@ -226,9 +230,14 @@ app.post('/saveTouches', function(request, response) {
     response.send('undefined body');
   }
   console.log(request.body);
+  
+  var loadedParameters = JSON.parse(request.body.result);
+  
+  var experimentType = loadedParameters.experimentType;
+  console.log('loading touches for experimentType: ' + experimentType);
 
   var prevTouches = [];
-  var results = (JSON.parse(request.body.result)).items;
+  var results = loadedParameters.items;
 
   console.log('assigning undefined objects to blank string');
   for (var index in results) {
@@ -252,7 +261,7 @@ app.post('/saveTouches', function(request, response) {
   async.series([
       // load all previous touches
       function(callback2) {
-        base('Touch Points').select({
+        base('Touch Points (' + experimentType + ')').select({
           // Selecting the first 3 records in Main View:
           view: "Main View"
         }).eachPage(function page(records, fetchNextPage) {
@@ -332,7 +341,7 @@ app.post('/saveTouches', function(request, response) {
           if (id == 'none') {
             console.log('creating new entry');
 
-            base('Touch Points').create(newEntry, function(err, record) {
+            base('Touch Points (' + experimentType + ')').create(newEntry, function(err, record) {
               if (err) {
                 console.log(err);
                 callback(err);
@@ -345,7 +354,7 @@ app.post('/saveTouches', function(request, response) {
             // update old entry
             console.log('updating old entry');
 
-            base('Touch Points').replace(id, newEntry, function(err, record) {
+            base('Touch Points (' + experimentType + ')').replace(id, newEntry, function(err, record) {
               if (err) {
                 console.log(err);
                 callback(err);

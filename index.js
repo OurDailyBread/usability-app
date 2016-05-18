@@ -186,7 +186,10 @@ app.get('/loadTouches', function(request, response) {
     // This function (`page`) will get called for each page of records.
 
     records.forEach(function(record) {
+
 	  console.log('record retrieved');
+      console.log('participant ID: ' + record.get('Participant ID'));
+
       if ((pID == 'all') || (pID == record.get('Participant ID'))) {
 
         console.log('Retrieved ' + record.get('Name') + ' for ' + record.get('Participant ID'));

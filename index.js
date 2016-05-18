@@ -318,6 +318,10 @@ app.post('/saveTouches', function(request, response) {
         console.log('preparing to write to Airtable');
         async.each(results, function(result, callback) {
           // save new result
+		  if (typeof result.details != 'undefined') {
+			  result.details = JSON.parse(result.details);
+		  }
+		  
           var id = 'none';
           console.log('loading result into data object');
           var newEntry = {
@@ -334,7 +338,7 @@ app.post('/saveTouches', function(request, response) {
             "Touch Y p": result['y-pos'] ? result['y-pos'] : '',
 			"Touch X mm": result['x-pos-mm'] ? result['x-pos-mm'] : '',
             "Touch Y mm": result['y-pos-mm'] ? result['y-pos-mm'] : '',
-            "Details": result['details'] ? JSON.parse(result['details']) : ''
+            "Details": result['details'] ? result['details'] : ''
           };
           console.log(newEntry);
 

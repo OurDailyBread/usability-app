@@ -289,7 +289,7 @@ app.post('/saveTouches', function(request, response) {
               'y-pos': record.get('Touch Y p'),
 			  'x-pos-mm': record.get('Touch X mm'),
               'y-pos-mm': record.get('Touch Y mm'),
-              'details': record.get('Details')
+              'details': JSON.parse(record.get('Details'))
             });
           });
 

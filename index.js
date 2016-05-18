@@ -343,6 +343,7 @@ app.post('/saveTouches', function(request, response) {
               (prevTouches[index].combo == result['combo']) &&
               (prevTouches[index].details['quadrant'] == result.details['quadrant']) &&
               (prevTouches[index].details['round'] == result.details['round'])) {
+			  console.log('located previous name of ' + prevTouches[index].name);
               id = prevTouches[index].id;
             }
           }

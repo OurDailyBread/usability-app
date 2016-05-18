@@ -334,7 +334,7 @@ app.post('/saveTouches', function(request, response) {
             "Touch Y p": result['y-pos'] ? result['y-pos'] : '',
 			"Touch X mm": result['x-pos-mm'] ? result['x-pos-mm'] : '',
             "Touch Y mm": result['y-pos-mm'] ? result['y-pos-mm'] : '',
-            "Details": result['details'] ? result['details'] : ''
+            "Details": result['details'] ? JSON.parse(result['details']) : ''
           };
           console.log(newEntry);
 

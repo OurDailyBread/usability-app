@@ -339,11 +339,12 @@ app.post('/saveTouches', function(request, response) {
           console.log(newEntry);
 
           for (var index in prevTouches) {
+			console('checking ' + prevTouches[index].details['round'] + ' with ' + result.details['round']);
             if ((prevTouches[index].pID == result['pID']) &&
               (prevTouches[index].combo == result['combo']) &&
               (prevTouches[index].details['quadrant'] == result.details['quadrant']) &&
               (prevTouches[index].details['round'] == result.details['round'])) {
-			  console.log('located previous name of ' + prevTouches[index].name);
+			  console.log('located previous name of ' + prevTouches[index].name + ' with id ' + prevTouches[index].id);
 			  console.log(prevTouches[index]);
               id = prevTouches[index].id;
             }

@@ -343,7 +343,7 @@ app.post('/saveTouches', function(request, response) {
           console.log(newEntry);
 
           for (var index in prevTouches) {
-			console.log('checking ' + prevTouches[index].details['round'] + ' with ' + result.details['round']);
+			//console.log('checking ' + prevTouches[index].details['round'] + ' with ' + result.details['round']);
             if ((prevTouches[index].pID == result['pID']) &&
               (prevTouches[index].combo == result['combo']) &&
               (prevTouches[index].details['quadrant'] == result.details['quadrant']) &&
@@ -354,7 +354,7 @@ app.post('/saveTouches', function(request, response) {
             }
           }
           if (id == 'none') {
-            console.log('creating new entry');
+            console.log('no previous entry found.  creating new entry');
 
             base('Touch Points (' + experimentType + ')').create(newEntry, function(err, record) {
               if (err) {

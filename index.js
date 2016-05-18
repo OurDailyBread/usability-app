@@ -277,7 +277,7 @@ app.post('/saveTouches', function(request, response) {
           // This function (`page`) will get called for each page of records.
 
           records.forEach(function(record) {
-            console.log('Retrieved ', record.get('Name'));
+            //console.log('Retrieved ', record.get('Name'));
             prevTouches.push({
               'id': record.getId(),
               'name': record.get('Name'),

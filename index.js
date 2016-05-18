@@ -344,6 +344,7 @@ app.post('/saveTouches', function(request, response) {
               (prevTouches[index].details['quadrant'] == result.details['quadrant']) &&
               (prevTouches[index].details['round'] == result.details['round'])) {
 			  console.log('located previous name of ' + prevTouches[index].name);
+			  console.log(prevTouches[index]);
               id = prevTouches[index].id;
             }
           }

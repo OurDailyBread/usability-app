@@ -339,7 +339,7 @@ app.post('/saveTouches', function(request, response) {
           console.log(newEntry);
 
           for (var index in prevTouches) {
-			console('checking ' + prevTouches[index].details['round'] + ' with ' + result.details['round']);
+			console.log('checking ' + prevTouches[index].details['round'] + ' with ' + result.details['round']);
             if ((prevTouches[index].pID == result['pID']) &&
               (prevTouches[index].combo == result['combo']) &&
               (prevTouches[index].details['quadrant'] == result.details['quadrant']) &&

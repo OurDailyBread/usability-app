@@ -223,7 +223,7 @@ app.get('/loadTouches', function(request, response) {
       response.send(error);
     } else {
 	  console.log('completed loading.  sending to webpage');
-	  console.log(JSON.stringify(JSONresults));
+	  //console.log(JSON.stringify(JSONresults));
       response.send(JSON.stringify(JSONresults));
     }
   });

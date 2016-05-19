@@ -386,8 +386,8 @@ app.post('/saveTouches', function(request, response) {
             callback2(error);
             return;
           } else {
-            console.log('done replacing all entries');
-            callback2(null, 'done replacing all entries');
+            console.log('done creating or replacing all entries');
+            callback2(null, 'done creating or replacing all entries');
           }
         });
       }

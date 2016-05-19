@@ -318,8 +318,9 @@ app.post('/saveTouches', function(request, response) {
         console.log('preparing to write to Airtable');
         async.each(results, function(result, callback) {
           // save new result
+		  var detailsJSON = {};
 		  if (typeof result.details != 'undefined') {
-			  result.details = JSON.parse(result.details);
+			  detailsJSON = JSON.parse(result.details);
 		  }
 		  
           var id = 'none';
@@ -346,8 +347,8 @@ app.post('/saveTouches', function(request, response) {
 			//console.log('checking ' + prevTouches[index].details['round'] + ' with ' + result.details['round']);
             if ((prevTouches[index].pID == result['pID']) &&
               (prevTouches[index].combo == result['combo']) &&
-              (prevTouches[index].details['quadrant'] == result.details['quadrant']) &&
-              (prevTouches[index].details['round'] == result.details['round'])) {
+              (prevTouches[index].details['quadrant'] == detailsJSON['quadrant']) &&
+              (prevTouches[index].details['round'] == detailsJSON['round'])) {
 			  console.log('located previous name of ' + prevTouches[index].name + ' with id ' + prevTouches[index].id);
 			  console.log(prevTouches[index]);
               id = prevTouches[index].id;
